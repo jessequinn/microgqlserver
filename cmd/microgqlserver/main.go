@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/99designs/gqlgen/handler"
-	helloProto "github.com/jessequinn/microgqlserver/internal/proto"
+	"github.com/jessequinn/microgqlserver/internal/proto/hello"
 	gql "github.com/micro/examples/greeter/api/graphql/graphql"
 	"github.com/micro/go-micro/client"
 	"github.com/micro/go-micro/util/log"
@@ -23,7 +23,7 @@ func main() {
 	}
 
 	// RPC client
-	cl := helloProto.NewSayService("go.micro.srv.greeter", client.DefaultClient)
+	cl := hello.NewSayService("go.micro.srv.greeter", client.DefaultClient)
 
 	// register graphql handlers
 	service.Handle("/", handler.Playground("GraphQL playground", "/query"))
