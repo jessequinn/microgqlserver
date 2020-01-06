@@ -1,15 +1,15 @@
 settings:
     files:
         outputs:
-            status: false
+            status: true
             path: ''
             name: .r.outputs.log
         logs:
-            status: false
+            status: true
             path: ''
             name: .r.logs.log
         errors:
-            status: false
+            status: true
             path: ''
             name: .r.errors.log
     legacy:
@@ -17,14 +17,14 @@ settings:
         interval: 0s
 schema:
     -   name: rpcserver
-        path: cmd
+        path: .
         commands:
             install:
                 status: true
-                method: go build -o ../build/rpcserver
+                method: go build -o rpcserver
             run:
                 status: true
-                method: build/rpcserver
+                method: rpcserver
         watcher:
             extensions:
                 - go
