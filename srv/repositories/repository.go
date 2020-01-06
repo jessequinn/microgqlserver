@@ -3,52 +3,66 @@ package repositories
 import (
 	"github.com/globalsign/mgo"
 	"github.com/globalsign/mgo/bson"
-	pb "github.com/jessequinn/microgqlserver/srv/proto/vessel"
+	pb "github.com/jessequinn/microgqlserver/srv/proto/auth"
+	//"gopkg.in/mgo.v2"
+	//"gopkg.in/mgo.v2/bson"
 )
 
+// https://docs.mongodb.com/manual/reference/limits/#restrictions-on-db-names
+// https://stackoverflow.com/questions/5916080/what-are-naming-conventions-for-mongodb
 const (
-	dbName           = "shippy"
-	vesselCollection = "vessels"
+	dbName           = "service"
+	vesselCollection = "users"
 )
 
 type Repository interface {
-	FindAvailable(*pb.Specification) (*pb.Vessel, error)
-	Create(vessel *pb.Vessel) error
+	GetAll() ([]*pb.User, error)
+	Get(id string) (*pb.User, error)
+	Create(user *pb.User) error
+	GetByEmail(email string) (*pb.User, error)
 	Close()
 }
 
-type VesselRepository struct {
+type AuthRepository struct {
 	Session *mgo.Session
 }
 
-// FindAvailable - checks a specification against a map of vessels,
-// if capacity and max weight are below a vessels capacity and max weight,
-// then return that vessel.
-func (repo *VesselRepository) FindAvailable(spec *pb.Specification) (*pb.Vessel, error) {
-	var vessel *pb.Vessel
-
-	// Here we define a more complex query than our consignment-service's
-	// GetAll function. Here we're asking for a vessel who's max weight and
-	// capacity are greater than and equal to the given capacity and weight.
-	// We're also using the `One` function here as that's all we want.
-	err := repo.collection().Find(bson.M{
-		"capacity":  bson.M{"$gte": spec.Capacity},
-		"maxweight": bson.M{"$gte": spec.MaxWeight},
-	}).One(&vessel)
-	if err != nil {
+func (repo *AuthRepository) GetAll() ([]*pb.User, error) {
+	var users []*pb.User
+	if err := repo.collection().Find(bson.M{}).All(&users); err != nil {
 		return nil, err
 	}
-	return vessel, nil
+	return users, nil
 }
 
-func (repo *VesselRepository) Create(vessel *pb.Vessel) error {
-	return repo.collection().Insert(vessel)
+func (repo *AuthRepository) Get(id string) (*pb.User, error) {
+	var user *pb.User
+	if err := repo.collection().Find(bson.M{"_id": id}).One(&user); err != nil {
+		return nil, err
+	}
+	return user, nil
 }
 
-func (repo *VesselRepository) Close() {
+func (repo *AuthRepository) GetByEmail(email string) (*pb.User, error) {
+	user := &pb.User{}
+	if err := repo.collection().Find(bson.M{"email": email}).One(&user); err != nil {
+		return nil, err
+	}
+	return user, nil
+}
+
+func (repo *AuthRepository) Create(user *pb.User) error {
+	if err := repo.collection().Insert(user); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (repo *AuthRepository) Close() {
 	repo.Session.Close()
 }
 
-func (repo *VesselRepository) collection() *mgo.Collection {
+// DB helper functions
+func (repo *AuthRepository) collection() *mgo.Collection {
 	return repo.Session.DB(dbName).C(vesselCollection)
 }

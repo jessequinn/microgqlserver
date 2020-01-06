@@ -3,8 +3,9 @@ package main
 import (
 	ds "github.com/jessequinn/microgqlserver/srv/datastores"
 	hs "github.com/jessequinn/microgqlserver/srv/handlers"
-	pb "github.com/jessequinn/microgqlserver/srv/proto/vessel"
+	pb "github.com/jessequinn/microgqlserver/srv/proto/auth"
 	rs "github.com/jessequinn/microgqlserver/srv/repositories"
+	ss "github.com/jessequinn/microgqlserver/srv/services"
 	"github.com/micro/go-micro"
 	"github.com/micro/go-micro/server"
 	"log"
@@ -18,10 +19,10 @@ const (
 
 func createDummyData(repo rs.Repository) {
 	defer repo.Close()
-	vessels := []*pb.Vessel{
-		{Id: "vessel001", Name: "Kane's Salty Secret", MaxWeight: 200000, Capacity: 500},
+	users := []*pb.User{
+		{Name: "Dummy Name", Company: "Dummy Company", Email: "dummy@dummy.com", Password: "dummy"},
 	}
-	for _, v := range vessels {
+	for _, v := range users {
 		repo.Create(v)
 	}
 }
@@ -36,7 +37,8 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error connecting to datastore: %v", err)
 	}
-	repo := &rs.VesselRepository{session.Copy()}
+	repo := &rs.AuthRepository{session.Copy()}
+	tokenService := &ss.TokenService{repo}
 	createDummyData(repo)
 	// Configure 'log' package to give file name and line number on eg. log.Fatal
 	// just the filename & line number:
@@ -56,7 +58,7 @@ func main() {
 		server.Wait(nil),
 	)
 	// Register Handlers
-	pb.RegisterVesselServiceHandler(srv.Server(), &hs.Service{session})
+	pb.RegisterUserServiceHandler(srv.Server(), &hs.Service{session, repo, tokenService})
 	// Run server
 	if err := srv.Run(); err != nil {
 		log.Fatal(err)

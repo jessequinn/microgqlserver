@@ -62,7 +62,8 @@ services:
         depends_on:
             - mongo-express
         environment:
-            DB_HOST: mongo1,mongo2,mongo3:27017/?replicaSet=rs0
+#            DB_HOST: mongo1,mongo2,mongo3:27017/?replicaSet=rs0
+            DB_HOST: mongo1:27017
             MICRO_ADDRESS: :50051
             MICRO_REGISTRY: mdns
         ports:
