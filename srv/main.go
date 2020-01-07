@@ -48,7 +48,7 @@ func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	service := grpc.NewService(
 		micro.Name("go.micro.srv.user"),
-		micro.Version("1.0.5"),
+		micro.Version("1.0.6"),
 		micro.RegisterTTL(time.Second*30),
 		micro.RegisterInterval(time.Second*10),
 	)
