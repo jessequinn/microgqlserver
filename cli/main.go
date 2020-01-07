@@ -4,19 +4,15 @@ import (
 	"context"
 	pb "github.com/jessequinn/microgqlserver/srv/proto/auth"
 	"github.com/micro/go-micro"
-	//"time"
-	//microclient "github.com/micro/go-micro/client"
-	//"github.com/micro/go-micro/config/cmd"
 	"log"
 	"os"
 )
 
 func main() {
-	//cmd.Init()
-	// Create new client
-	//client := pb.NewUserService("go.micro.srv.user", microclient.DefaultClient)
 	// create a new service
-	cli := micro.NewService()
+	cli := micro.NewService(
+		micro.Version("1.0.4"),
+	)
 	// parse command line flags
 	cli.Init()
 	// Create new greeter client
