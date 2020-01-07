@@ -39,7 +39,7 @@ func main() {
 	}
 	repo := &rs.AuthRepository{session.Copy()}
 	tokenService := &ss.TokenService{repo}
-	createDummyData(repo)
+	//createDummyData(repo)
 	// Configure 'log' package to give file name and line number on eg. log.Fatal
 	// just the filename & line number:
 	// log.SetFlags(log.Lshortfile)
@@ -47,7 +47,7 @@ func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	srv := micro.NewService(
 		micro.Name("go.micro.srv.user"),
-		micro.Version("0.1"),
+		micro.Version("1.0.4"),
 		micro.RegisterTTL(time.Second*30),
 		micro.RegisterInterval(time.Second*10),
 	)
