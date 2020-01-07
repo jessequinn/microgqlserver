@@ -18,7 +18,7 @@ func main() {
 	company := "CBS"
 	// create a new service
 	service := grpc.NewService(
-		micro.Version("1.0.5"),
+		micro.Version("1.0.6"),
 	)
 	// parse command line flags
 	service.Init()
