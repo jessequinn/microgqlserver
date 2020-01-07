@@ -46,7 +46,7 @@ func main() {
 	// Or add timestamps and pipe file name and line number to it:
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	srv := micro.NewService(
-		micro.Name("go.micro.srv.rpcserver"),
+		micro.Name("go.micro.srv.user"),
 		micro.Version("0.1"),
 		micro.RegisterTTL(time.Second*30),
 		micro.RegisterInterval(time.Second*10),

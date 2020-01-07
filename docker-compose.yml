@@ -56,6 +56,13 @@ services:
             - 27019:27017
         hostname: mongo3
         restart: unless-stopped
+    cli:
+        build: ./cli
+        container_name: rpcserver_cli
+        environment:
+            MICRO_REGISTRY: "mdns"
+        depends_on:
+          - srv
     srv:
         build: ./srv
         container_name: rpcserver_srv
