@@ -1,0 +1,20 @@
+# .gqlgen.yml example
+#
+# Refer to https://gqlgen.com/config/
+# for detailed .gqlgen.yml documentation.
+
+schema: schema.graphql
+exec:
+  filename: generated.go
+  package: gql
+model:
+  filename: models_gen.go
+resolver:
+    filename: resolvers/generated/resolver.go
+    type: Resolver
+    package: resolvers
+autobind: []
+
+models:
+  HelloResponse:
+    model: github.com/jessequinn/microgqlserver/internal/proto/hello.Response
