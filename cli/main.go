@@ -18,7 +18,7 @@ func main() {
 	company := "CBS"
 	// create a new service
 	service := grpc.NewService(
-		micro.Version("1.0.4"),
+		micro.Version("1.0.5"),
 	)
 	// parse command line flags
 	service.Init()
@@ -44,7 +44,7 @@ func main() {
 		log.Fatalf("Could not list users: %v", err)
 	}
 	for _, v := range getAll.Users {
-		log.Println(v.XId)
+		log.Println(v.Id)
 	}
 	authResponse, err := client.Auth(ctx, &pb.User{
 		Email:    email,
