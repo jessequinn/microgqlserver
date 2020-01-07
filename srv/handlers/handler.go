@@ -14,23 +14,18 @@ import (
 // Our gRPC Service handler
 type Service struct {
 	Session      *mgo.Session
-	Repo         rs.Repository
 	TokenService ss.Authable
 }
 
-//func (srv *Service) GetRepo() rs.Repository {
-//	return &rs.AuthRepository{s.Session.Clone()}
-//}
-//
-//func (srv *Service) GetTokenService() ss.TokenService {
-//	return &ss.TokenService{}
-//}
+func (srv *Service) GetRepo() rs.Repository {
+	return &rs.AuthRepository{srv.Session.Clone()}
+}
 
 func (srv *Service) Get(ctx context.Context, req *pb.User, res *pb.Response) error {
-	//repo := srv.GetRepo()
-	defer srv.Repo.Close()
+	repo := srv.GetRepo()
+	defer repo.Close()
 
-	user, err := srv.Repo.Get(req.Id)
+	user, err := repo.Get(req.Id)
 	if err != nil {
 		return err
 	}
@@ -39,8 +34,9 @@ func (srv *Service) Get(ctx context.Context, req *pb.User, res *pb.Response) err
 }
 
 func (srv *Service) GetAll(ctx context.Context, req *pb.Request, res *pb.Response) error {
-	//repo := srv.GetRepo()
-	users, err := srv.Repo.GetAll()
+	repo := srv.GetRepo()
+	defer repo.Close()
+	users, err := repo.GetAll()
 	if err != nil {
 		return err
 	}
@@ -49,10 +45,10 @@ func (srv *Service) GetAll(ctx context.Context, req *pb.Request, res *pb.Respons
 }
 
 func (srv *Service) Auth(ctx context.Context, req *pb.User, res *pb.Token) error {
-	//repo := srv.GetRepo()
-	//tkn := ss.GetTokenService()
+	repo := srv.GetRepo()
+	defer repo.Close()
 	log.Println("Logging in with:", req.Email, req.Password)
-	user, err := srv.Repo.GetByEmail(req.Email)
+	user, err := repo.GetByEmail(req.Email)
 	log.Println(user)
 	if err != nil {
 		return err
@@ -71,14 +67,15 @@ func (srv *Service) Auth(ctx context.Context, req *pb.User, res *pb.Token) error
 }
 
 func (srv *Service) Create(ctx context.Context, req *pb.User, res *pb.Response) error {
-	//repo := srv.GetRepo()
+	repo := srv.GetRepo()
+	defer repo.Close()
 	// Generates a hashed version of our password
 	hashedPass, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return err
 	}
 	req.Password = string(hashedPass)
-	if err := srv.Repo.Create(req); err != nil {
+	if err := repo.Create(req); err != nil {
 		return err
 	}
 	res.User = req
@@ -86,7 +83,6 @@ func (srv *Service) Create(ctx context.Context, req *pb.User, res *pb.Response) 
 }
 
 func (srv *Service) ValidateToken(ctx context.Context, req *pb.Token, res *pb.Token) error {
-	//tkn := srv.GetTokenService()
 	// Decode token
 	claims, err := srv.TokenService.Decode(req.Token)
 	if err != nil {

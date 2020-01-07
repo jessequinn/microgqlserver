@@ -3,18 +3,20 @@ package main
 import (
 	"context"
 	pb "github.com/jessequinn/microgqlserver/srv/proto/auth"
-	//pb "github.com/jessequinn/microgqlserver/cli/proto/auth"
 	"github.com/micro/go-micro"
+	//"time"
+	//microclient "github.com/micro/go-micro/client"
+	//"github.com/micro/go-micro/config/cmd"
 	"log"
 	"os"
 )
 
 func main() {
+	//cmd.Init()
+	// Create new client
+	//client := pb.NewUserService("go.micro.srv.user", microclient.DefaultClient)
 	// create a new service
-	cli := micro.NewService(
-		micro.Name("go.micro.cli.user"),
-		micro.Version("0.1"),
-	)
+	cli := micro.NewService()
 	// parse command line flags
 	cli.Init()
 	// Create new greeter client
@@ -33,7 +35,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Could not create: %v", err)
 	}
-	log.Printf("Created: %s", r.User.Id)
+	log.Printf("Created: %s", r.User.XId)
 	getAll, err := client.GetAll(context.Background(), &pb.Request{})
 	if err != nil {
 		log.Fatalf("Could not list users: %v", err)

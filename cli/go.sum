@@ -199,7 +199,8 @@ github.com/iij/doapi v0.0.0-20190504054126-0bbf12d6d7df/go.mod h1:QMZY7/J/KSQEhK
 github.com/ijc/Gotty v0.0.0-20170406111628-a8b993ba6abd/go.mod h1:3LVOLeyx9XVvwPgrt2be44XgSqndprz1G18rSk8KD84=
 github.com/imdario/mergo v0.3.8/go.mod h1:2EnlNZ0deacrJVfApfmtdGgDfMuh/nq6Ok1EcJh5FfA=
 github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99/go.mod h1:1lJo3i6rXxKeerYnT8Nvf0QmHCRC1n8sfWVwXF2Frvo=
-github.com/jessequinn/microgqlserver v0.0.0-20191231183903-3816d22ef837 h1:mN7W7qGoMIb/HhvlN0b2c3Zy6H5B/kM1y5ZIfCBm/Bs=
+github.com/jessequinn/microgqlserver/srv v0.0.0-20200107020522-68976490c4c1 h1:k6xuJ4QUdJCyso9pQu/PZ8slkYdibJR/gxrlXbf7Uos=
+github.com/jessequinn/microgqlserver/srv v0.0.0-20200107020522-68976490c4c1/go.mod h1:88fDDidHyKnNUZUwuv+QAk2v+1k8qUArJI/VrT7mm+k=
 github.com/jessevdk/go-flags v1.4.0/go.mod h1:4FA24M0QyGHXBuZZK/XkWh8h0e1EYbRYJSGM75WSRxI=
 github.com/jmespath/go-jmespath v0.0.0-20180206201540-c2b33e8439af/go.mod h1:Nht3zPeWKUH0NzdCt2Blrr5ys8VGpn0CEB0cQHVjt7k=
 github.com/jonboulle/clockwork v0.1.0 h1:VKV+ZcuP6l3yW9doeqz6ziZGgcynBVQO+obU0+0hcPo=

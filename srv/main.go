@@ -58,9 +58,9 @@ func main() {
 		server.Wait(nil),
 	)
 	// Register Handlers
-	pb.RegisterUserServiceHandler(srv.Server(), &hs.Service{session, repo, tokenService})
+	pb.RegisterUserServiceHandler(srv.Server(), &hs.Service{session, tokenService})
 	// Run server
 	if err := srv.Run(); err != nil {
-		log.Fatal(err)
+		log.Fatalf("Error running server: %v", err)
 	}
 }

@@ -6,9 +6,8 @@ proto:
 	protoc --proto_path=${GOPATH}/src:. --micro_out=. --go_out=. proto/auth/*.proto
 
 .PHONY: build
-build: proto
-
-	go build -o rpcserver main.go
+build:
+	go build -o cli main.go
 
 .PHONY: test
 test:
