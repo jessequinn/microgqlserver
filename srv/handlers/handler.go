@@ -24,8 +24,7 @@ func (srv *Service) GetRepo() rs.Repository {
 func (srv *Service) Get(ctx context.Context, req *pb.User, res *pb.Response) error {
 	repo := srv.GetRepo()
 	defer repo.Close()
-
-	user, err := repo.Get(req.XId)
+	user, err := repo.Get(req.Id)
 	if err != nil {
 		return err
 	}
@@ -89,7 +88,7 @@ func (srv *Service) ValidateToken(ctx context.Context, req *pb.Token, res *pb.To
 		return err
 	}
 	log.Println(claims)
-	if claims.User.XId == "" {
+	if claims.User.Id == "" {
 		return errors.New("invalid user")
 	}
 	res.Valid = true
