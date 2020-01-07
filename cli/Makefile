@@ -1,13 +1,13 @@
 TAG     := $$(git rev-parse --short HEAD)
-GOPATH	:=$(shell go env GOPATH)
-
-.PHONY: proto
-proto:
-	protoc --proto_path=${GOPATH}/src:. --micro_out=. --go_out=. proto/auth/*.proto
+GOPATH	:= $(shell go env GOPATH)
 
 .PHONY: build
 build:
-	go build -o cli main.go
+	go build -o authcli main.go
+
+.PHONY: run
+run:
+	go run main.go --registry=mdns
 
 .PHONY: test
 test:
@@ -15,7 +15,7 @@ test:
 
 .PHONY: docker
 docker:
-	@docker build -t rpcserver:prod .
-	@docker tag rpcserver:prod rpcserver:${TAG}
-	@docker tag rpcserver:prod rpcserver:latest
+	@docker build -t authcli:prod .
+	@docker tag authcli:prod authcli:${TAG}
+	@docker tag authcli:prod authcli:latest
 

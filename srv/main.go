@@ -8,6 +8,7 @@ import (
 	ss "github.com/jessequinn/microgqlserver/srv/services"
 	"github.com/micro/go-micro"
 	"github.com/micro/go-micro/server"
+	"github.com/micro/go-micro/service/grpc"
 	"log"
 	"os"
 	"time"
@@ -45,22 +46,22 @@ func main() {
 	// log.SetFlags(log.Lshortfile)
 	// Or add timestamps and pipe file name and line number to it:
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
-	srv := micro.NewService(
+	service := grpc.NewService(
 		micro.Name("go.micro.srv.user"),
-		micro.Version("1.0.4"),
+		micro.Version("1.0.5"),
 		micro.RegisterTTL(time.Second*30),
 		micro.RegisterInterval(time.Second*10),
 	)
 	// optionally setup command line usage
-	srv.Init()
+	service.Init()
 	// Graceful shutdown
-	srv.Server().Init(
+	service.Server().Init(
 		server.Wait(nil),
 	)
 	// Register Handlers
-	pb.RegisterUserServiceHandler(srv.Server(), &hs.Service{session, tokenService})
+	pb.RegisterUserServiceHandler(service.Server(), &hs.Service{session, tokenService})
 	// Run server
-	if err := srv.Run(); err != nil {
+	if err := service.Run(); err != nil {
 		log.Fatalf("Error running server: %v", err)
 	}
 }

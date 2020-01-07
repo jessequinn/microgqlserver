@@ -62,18 +62,17 @@ services:
 #        restart: unless-stopped
     cli:
         build: ./cli
-        container_name: rpcserver_cli
+        container_name: authcli
         environment:
             MICRO_REGISTRY: mdns
         depends_on:
           - srv
     srv:
         build: ./srv
-        container_name: rpcserver_srv
+        container_name: authsrv
         depends_on:
             - datastore
         environment:
-#            DB_HOST: mongo1,mongo2,mongo3:27017/?replicaSet=rs0
             DB_HOST: datastore:27017
             MICRO_ADDRESS: :50051
             MICRO_REGISTRY: mdns

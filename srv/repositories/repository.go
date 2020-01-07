@@ -27,11 +27,22 @@ type AuthRepository struct {
 	Session *mgo.Session
 }
 
+//type AuthUser struct {
+//	ID       bson.ObjectId `bson:"_id,omitempty"`
+//	Name     string        `bson:"name"`
+//	Company  string        `bson:"company"`
+//	Email    string        `bson:"email"`
+//	Password string        `bson:"password"`
+//}
+
 func (repo *AuthRepository) GetAll() ([]*pb.User, error) {
+	//var data []AuthUser
+
 	var users []*pb.User
 	if err := repo.collection().Find(bson.M{}).All(&users); err != nil {
 		return nil, err
 	}
+
 	return users, nil
 }
 

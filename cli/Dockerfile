@@ -7,7 +7,7 @@ RUN rm -r Makefile
 
 ENV GO111MODULE=on
 
-RUN CGO_ENABLED=0 GOOS=linux go build -o cli
+RUN CGO_ENABLED=0 GOOS=linux go build -o authcli
 
 
 FROM alpine:3.11
@@ -16,6 +16,6 @@ RUN apk --no-cache add ca-certificates
 
 RUN mkdir /app
 WORKDIR /app
-COPY --from=builder /go/src/github.com/jessequinn/microgqlserver/cli/cli .
+COPY --from=builder /go/src/github.com/jessequinn/microgqlserver/cli/authcli .
 
-CMD ["./cli"]
+CMD ["./authcli"]
