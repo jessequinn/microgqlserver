@@ -57,14 +57,14 @@ type ComplexityRoot struct {
 }
 
 type QueryResolver interface {
-	Users(ctx context.Context) ([]*go_micro_srv_user.Response, error)
+	Users(ctx context.Context) ([]*go_micro_srv_user.GetUserResponse, error)
 }
 type UserResolver interface {
-	ID(ctx context.Context, obj *go_micro_srv_user.Response) (string, error)
-	Name(ctx context.Context, obj *go_micro_srv_user.Response) (string, error)
-	Company(ctx context.Context, obj *go_micro_srv_user.Response) (string, error)
-	Email(ctx context.Context, obj *go_micro_srv_user.Response) (string, error)
-	Password(ctx context.Context, obj *go_micro_srv_user.Response) (string, error)
+	ID(ctx context.Context, obj *go_micro_srv_user.GetUserResponse) (string, error)
+	Name(ctx context.Context, obj *go_micro_srv_user.GetUserResponse) (string, error)
+	Company(ctx context.Context, obj *go_micro_srv_user.GetUserResponse) (string, error)
+	Email(ctx context.Context, obj *go_micro_srv_user.GetUserResponse) (string, error)
+	Password(ctx context.Context, obj *go_micro_srv_user.GetUserResponse) (string, error)
 }
 
 type executableSchema struct {
@@ -272,10 +272,10 @@ func (ec *executionContext) _Query_users(ctx context.Context, field graphql.Coll
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*go_micro_srv_user.Response)
+	res := resTmp.([]*go_micro_srv_user.GetUserResponse)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-	return ec.marshalNUser2ᚕᚖgithubᚗcomᚋjessequinnᚋmicrogqlserverᚋsrvᚋauthsrvᚋprotoᚋauthᚐResponseᚄ(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚕᚖgithubᚗcomᚋjessequinnᚋmicrogqlserverᚋsrvᚋauthsrvᚋprotoᚋauthᚐGetUserResponseᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -353,7 +353,7 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	return ec.marshalO__Schema2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐSchema(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _User_id(ctx context.Context, field graphql.CollectedField, obj *go_micro_srv_user.Response) (ret graphql.Marshaler) {
+func (ec *executionContext) _User_id(ctx context.Context, field graphql.CollectedField, obj *go_micro_srv_user.GetUserResponse) (ret graphql.Marshaler) {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() {
 		if r := recover(); r != nil {
@@ -390,7 +390,7 @@ func (ec *executionContext) _User_id(ctx context.Context, field graphql.Collecte
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _User_name(ctx context.Context, field graphql.CollectedField, obj *go_micro_srv_user.Response) (ret graphql.Marshaler) {
+func (ec *executionContext) _User_name(ctx context.Context, field graphql.CollectedField, obj *go_micro_srv_user.GetUserResponse) (ret graphql.Marshaler) {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() {
 		if r := recover(); r != nil {
@@ -427,7 +427,7 @@ func (ec *executionContext) _User_name(ctx context.Context, field graphql.Collec
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _User_company(ctx context.Context, field graphql.CollectedField, obj *go_micro_srv_user.Response) (ret graphql.Marshaler) {
+func (ec *executionContext) _User_company(ctx context.Context, field graphql.CollectedField, obj *go_micro_srv_user.GetUserResponse) (ret graphql.Marshaler) {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() {
 		if r := recover(); r != nil {
@@ -464,7 +464,7 @@ func (ec *executionContext) _User_company(ctx context.Context, field graphql.Col
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _User_email(ctx context.Context, field graphql.CollectedField, obj *go_micro_srv_user.Response) (ret graphql.Marshaler) {
+func (ec *executionContext) _User_email(ctx context.Context, field graphql.CollectedField, obj *go_micro_srv_user.GetUserResponse) (ret graphql.Marshaler) {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() {
 		if r := recover(); r != nil {
@@ -501,7 +501,7 @@ func (ec *executionContext) _User_email(ctx context.Context, field graphql.Colle
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _User_password(ctx context.Context, field graphql.CollectedField, obj *go_micro_srv_user.Response) (ret graphql.Marshaler) {
+func (ec *executionContext) _User_password(ctx context.Context, field graphql.CollectedField, obj *go_micro_srv_user.GetUserResponse) (ret graphql.Marshaler) {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() {
 		if r := recover(); r != nil {
@@ -1743,7 +1743,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 
 var userImplementors = []string{"User"}
 
-func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj *go_micro_srv_user.Response) graphql.Marshaler {
+func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj *go_micro_srv_user.GetUserResponse) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.RequestContext, sel, userImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -2106,11 +2106,11 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 	return res
 }
 
-func (ec *executionContext) marshalNUser2githubᚗcomᚋjessequinnᚋmicrogqlserverᚋsrvᚋauthsrvᚋprotoᚋauthᚐResponse(ctx context.Context, sel ast.SelectionSet, v go_micro_srv_user.Response) graphql.Marshaler {
+func (ec *executionContext) marshalNUser2githubᚗcomᚋjessequinnᚋmicrogqlserverᚋsrvᚋauthsrvᚋprotoᚋauthᚐGetUserResponse(ctx context.Context, sel ast.SelectionSet, v go_micro_srv_user.GetUserResponse) graphql.Marshaler {
 	return ec._User(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNUser2ᚕᚖgithubᚗcomᚋjessequinnᚋmicrogqlserverᚋsrvᚋauthsrvᚋprotoᚋauthᚐResponseᚄ(ctx context.Context, sel ast.SelectionSet, v []*go_micro_srv_user.Response) graphql.Marshaler {
+func (ec *executionContext) marshalNUser2ᚕᚖgithubᚗcomᚋjessequinnᚋmicrogqlserverᚋsrvᚋauthsrvᚋprotoᚋauthᚐGetUserResponseᚄ(ctx context.Context, sel ast.SelectionSet, v []*go_micro_srv_user.GetUserResponse) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -2134,7 +2134,7 @@ func (ec *executionContext) marshalNUser2ᚕᚖgithubᚗcomᚋjessequinnᚋmicro
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNUser2ᚖgithubᚗcomᚋjessequinnᚋmicrogqlserverᚋsrvᚋauthsrvᚋprotoᚋauthᚐResponse(ctx, sel, v[i])
+			ret[i] = ec.marshalNUser2ᚖgithubᚗcomᚋjessequinnᚋmicrogqlserverᚋsrvᚋauthsrvᚋprotoᚋauthᚐGetUserResponse(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -2147,7 +2147,7 @@ func (ec *executionContext) marshalNUser2ᚕᚖgithubᚗcomᚋjessequinnᚋmicro
 	return ret
 }
 
-func (ec *executionContext) marshalNUser2ᚖgithubᚗcomᚋjessequinnᚋmicrogqlserverᚋsrvᚋauthsrvᚋprotoᚋauthᚐResponse(ctx context.Context, sel ast.SelectionSet, v *go_micro_srv_user.Response) graphql.Marshaler {
+func (ec *executionContext) marshalNUser2ᚖgithubᚗcomᚋjessequinnᚋmicrogqlserverᚋsrvᚋauthsrvᚋprotoᚋauthᚐGetUserResponse(ctx context.Context, sel ast.SelectionSet, v *go_micro_srv_user.GetUserResponse) graphql.Marshaler {
 	if v == nil {
 		if !ec.HasError(graphql.GetResolverContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")

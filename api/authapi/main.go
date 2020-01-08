@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/99designs/gqlgen/handler"
-	gql "github.com/jessequinn/microgqlserver/api/authapi/gql"
+	"github.com/jessequinn/microgqlserver/api/authapi/gql"
 	rs "github.com/jessequinn/microgqlserver/api/authapi/gql/resolvers"
 	pb "github.com/jessequinn/microgqlserver/srv/authsrv/proto/auth"
 	"github.com/micro/go-micro/client"

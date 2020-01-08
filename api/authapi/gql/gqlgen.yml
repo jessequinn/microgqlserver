@@ -16,4 +16,4 @@ resolver:
 autobind: []
 models:
     User:
-        model: github.com/jessequinn/microgqlserver/srv/authsrv/proto/auth.Response
+        model: github.com/jessequinn/microgqlserver/srv/authsrv/proto/auth.GetUserResponse

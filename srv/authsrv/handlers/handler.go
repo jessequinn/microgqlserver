@@ -21,7 +21,7 @@ func (srv *Service) GetRepo() rs.Repository {
 	return &rs.AuthRepository{srv.Session.Clone()}
 }
 
-func (srv *Service) Get(ctx context.Context, req *pb.User, res *pb.Response) error {
+func (srv *Service) Get(ctx context.Context, req *pb.User, res *pb.GetUserResponse) error {
 	repo := srv.GetRepo()
 	defer repo.Close()
 	user, err := repo.Get(req.Id)
@@ -32,7 +32,7 @@ func (srv *Service) Get(ctx context.Context, req *pb.User, res *pb.Response) err
 	return nil
 }
 
-func (srv *Service) GetAll(ctx context.Context, req *pb.Request, res *pb.Response) error {
+func (srv *Service) GetAll(ctx context.Context, req *pb.Request, res *pb.GetUsersResponse) error {
 	repo := srv.GetRepo()
 	defer repo.Close()
 	users, err := repo.GetAll()
@@ -65,7 +65,7 @@ func (srv *Service) Auth(ctx context.Context, req *pb.User, res *pb.Token) error
 	return nil
 }
 
-func (srv *Service) Create(ctx context.Context, req *pb.User, res *pb.Response) error {
+func (srv *Service) Create(ctx context.Context, req *pb.User, res *pb.CreateUserResponse) error {
 	repo := srv.GetRepo()
 	defer repo.Close()
 	// Generates a hashed version of our password

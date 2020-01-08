@@ -9,7 +9,6 @@ require (
 	github.com/globalsign/mgo v0.0.0-20181015135952-eeefdecb41b8
 	github.com/go-siris/siris v7.4.0+incompatible // indirect
 	github.com/golang/protobuf v1.3.2
-	github.com/jessequinn/microgqlserver/srv v0.0.0-20200107152535-3335249a4d7d
 	github.com/labstack/echo v3.3.10+incompatible // indirect
 	github.com/labstack/gommon v0.3.0 // indirect
 	github.com/micro/go-micro v1.18.0
