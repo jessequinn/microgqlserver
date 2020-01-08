@@ -8,7 +8,6 @@ import (
 	ss "github.com/jessequinn/microgqlserver/srv/authsrv/services"
 	"github.com/micro/go-micro"
 	"github.com/micro/go-micro/server"
-	"github.com/micro/go-micro/service/grpc"
 	"log"
 	"os"
 	"time"
@@ -40,7 +39,7 @@ func main() {
 	repo := &rs.AuthRepository{session.Copy()}
 	tokenService := &ss.TokenService{repo}
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
-	service := grpc.NewService(
+	service := micro.NewService(
 		micro.Name("go.micro.srv.user"),
 		micro.Version("1.0.6"),
 		micro.RegisterTTL(time.Second*30),

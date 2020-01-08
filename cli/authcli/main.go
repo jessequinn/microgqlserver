@@ -4,8 +4,6 @@ import (
 	"context"
 	pb "github.com/jessequinn/microgqlserver/srv/authsrv/proto/auth"
 	"github.com/micro/go-micro"
-	"github.com/micro/go-micro/metadata"
-	"github.com/micro/go-micro/service/grpc"
 	"log"
 	"os"
 )
@@ -17,7 +15,7 @@ func main() {
 	password := "test123"
 	company := "CBS"
 	// create a new service
-	service := grpc.NewService(
+	service := micro.NewService(
 		micro.Version("1.0.6"),
 	)
 	// parse command line flags
@@ -25,11 +23,12 @@ func main() {
 	// Create new greeter client
 	client := pb.NewUserService("go.micro.srv.user", service.Client())
 	// Set arbitrary headers in context
-	ctx := metadata.NewContext(context.Background(), map[string]string{
-		"X-User-Id": "jesse quinn",
-		"X-From-Id": "authcli",
-	})
-	rsp, err := client.Create(ctx, &pb.User{
+	//ctx := metadata.NewContext(context.Background(), map[string]string{
+	//	"X-User-Id": "jesse quinn",
+	//	"X-From-Id": "authcli",
+	//})
+	//rsp, err := client.Create(ctx, &pb.User{
+	rsp, err := client.Create(context.Background(), &pb.User{
 		Name:     name,
 		Email:    email,
 		Password: password,
@@ -46,7 +45,7 @@ func main() {
 	for _, v := range getAll.Users {
 		log.Println(v.Id)
 	}
-	authResponse, err := client.Auth(ctx, &pb.User{
+	authResponse, err := client.Auth(context.Background(), &pb.User{
 		Email:    email,
 		Password: password,
 	})
