@@ -67,7 +67,7 @@ To build the graphql dependencies
 
     $ make gen
     
-To build apps
+To build the apps
 
     $ make build
 
@@ -80,3 +80,5 @@ For discovery, `etcd` is used. Therefore to talk to a service the following is r
     $ ./authcli --registry=etcd --registry_address=http://localhost:2379 api # an example
 
 This command is ran from the `cli` directory if not obvious.
+
+To connect to the GraphQL playground `http://localhost:8000/`

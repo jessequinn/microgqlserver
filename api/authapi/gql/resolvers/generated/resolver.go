@@ -11,11 +11,20 @@ import (
 
 type Resolver struct{}
 
+func (r *Resolver) Mutation() gql.MutationResolver {
+	return &mutationResolver{r}
+}
 func (r *Resolver) Query() gql.QueryResolver {
 	return &queryResolver{r}
 }
 func (r *Resolver) User() gql.UserResolver {
 	return &userResolver{r}
+}
+
+type mutationResolver struct{ *Resolver }
+
+func (r *mutationResolver) CreateUser(ctx context.Context, user go_micro_srv_user.User) (*go_micro_srv_user.GetUserResponse, error) {
+	panic("not implemented")
 }
 
 type queryResolver struct{ *Resolver }
