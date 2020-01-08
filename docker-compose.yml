@@ -1,6 +1,39 @@
 version: '3.7'
 
 services:
+    etcd:
+        image: bitnami/etcd:latest
+        environment:
+            - ALLOW_NONE_AUTHENTICATION=yes
+            - ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379
+        ports:
+            - 2379:2379
+            - 2380:2380
+    micro:
+        image: microhq/micro:latest
+        command: --registry=etcd --registry_address=etcd:2379 api --handler=rpc
+        ports:
+            - 8080:8080
+        links:
+            - etcd
+    authsrv:
+        build: ./srv/authsrv
+        container_name: authsrv
+        command: --registry=etcd --registry_address=etcd:2379
+        depends_on:
+            - datastore
+        environment:
+            DB_HOST: datastore:27017
+        links:
+            - etcd
+    authcli:
+        build: ./cli/authcli
+        container_name: authcli
+        command: --registry=etcd --registry_address=etcd:2379
+        depends_on:
+            - authsrv
+        links:
+          - etcd
     datastore:
         image: mongo:4.2.2-bionic
         ports:
@@ -60,21 +93,11 @@ services:
 #            - 27019:27017
 #        hostname: mongo3
 #        restart: unless-stopped
-    cli:
-        build: ./cli
-        container_name: authcli
-        environment:
-            MICRO_REGISTRY: mdns
-        depends_on:
-          - srv
-    srv:
-        build: ./srv
-        container_name: authsrv
-        depends_on:
-            - datastore
-        environment:
-            DB_HOST: datastore:27017
-            MICRO_ADDRESS: :50051
-            MICRO_REGISTRY: mdns
-        ports:
-            - 50053:50051
+
+#    api:
+#        build: ./api
+#        container_name: authapi
+#        environment:
+#            MICRO_REGISTRY: mdns
+#        depends_on:
+#            - srv

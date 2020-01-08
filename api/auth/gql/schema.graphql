@@ -1,0 +1,11 @@
+type User {
+    id: String!
+    Name: String!
+    Company: String!
+    Email: String!
+    Password: String!
+}
+
+type Query {
+    users: [User!]!
+}
