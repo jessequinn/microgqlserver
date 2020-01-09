@@ -70,7 +70,16 @@ func (repo *AuthRepository) GetByEmail(email string) (*pb.User, error) {
 }
 
 func (repo *AuthRepository) Create(user *pb.User) error {
-	if err := repo.collection().Insert(user); err != nil {
+	// Generate Object ID
+	i := bson.NewObjectId()
+	user.Id = i.Hex()
+	if err := repo.collection().Insert(bson.M{
+		"_id":      i,
+		"name":     user.Name,
+		"company":  user.Company,
+		"email":    user.Email,
+		"password": user.Password,
+	}); err != nil {
 		return err
 	}
 	return nil
