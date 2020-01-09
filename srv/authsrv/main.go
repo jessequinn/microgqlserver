@@ -37,20 +37,33 @@ func createDummyData(repo rs.Repository) {
 
 var log = logrus.New()
 
+// Print to stdout and stderr
+// Save InfoLevel to access.log
+// Save FatalLevel to error.log
 func init() {
 	log.Out = os.Stdout
-	file, err := os.OpenFile("/logs/access.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	accessFile, err := os.OpenFile("/logs/access.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if err == nil {
-		log.Out = file
+		log.AddHook(&loggers.WriterHook{
+			Writer: accessFile,
+			LogLevels: []logrus.Level{
+				logrus.InfoLevel,
+			},
+		})
 	} else {
 		log.Info("Failed to log to file, using default stderr")
 	}
-	log.AddHook(&loggers.WriterHook{
-		Writer: log.Out,
-		LogLevels: []logrus.Level{
-			logrus.InfoLevel,
-		},
-	})
+	errorFile, err := os.OpenFile("/logs/error.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	if err == nil {
+		log.AddHook(&loggers.WriterHook{
+			Writer: errorFile,
+			LogLevels: []logrus.Level{
+				logrus.FatalLevel,
+			},
+		})
+	} else {
+		log.Info("Failed to log to file, using default stderr")
+	}
 }
 
 func main() {
