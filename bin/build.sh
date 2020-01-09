@@ -11,6 +11,6 @@ build() {
 	done
 }
 
-#build api
+build api
 build cli
 build srv

@@ -3,18 +3,20 @@ package handlers
 import (
 	"errors"
 	"github.com/globalsign/mgo"
+	"github.com/sirupsen/logrus"
+	"golang.org/x/crypto/bcrypt"
+	"golang.org/x/net/context"
+
 	pb "github.com/jessequinn/microgqlserver/srv/authsrv/proto/auth"
 	rs "github.com/jessequinn/microgqlserver/srv/authsrv/repositories"
 	ss "github.com/jessequinn/microgqlserver/srv/authsrv/services"
-	"golang.org/x/crypto/bcrypt"
-	"golang.org/x/net/context"
-	"log"
 )
 
 // Our gRPC Service handler
 type Service struct {
 	Session      *mgo.Session
 	TokenService ss.Authable
+	Log          *logrus.Logger
 }
 
 func (srv *Service) GetRepo() rs.Repository {
@@ -43,28 +45,6 @@ func (srv *Service) GetAll(ctx context.Context, req *pb.Request, res *pb.GetUser
 	return nil
 }
 
-func (srv *Service) Auth(ctx context.Context, req *pb.User, res *pb.Token) error {
-	repo := srv.GetRepo()
-	defer repo.Close()
-	log.Println("Logging in with:", req.Email, req.Password)
-	user, err := repo.GetByEmail(req.Email)
-	log.Println(user)
-	if err != nil {
-		return err
-	}
-	// Compares our given password against the hashed password
-	// stored in the database
-	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password)); err != nil {
-		return err
-	}
-	token, err := srv.TokenService.Encode(user)
-	if err != nil {
-		return err
-	}
-	res.Token = token
-	return nil
-}
-
 func (srv *Service) Create(ctx context.Context, req *pb.User, res *pb.CreateUserResponse) error {
 	repo := srv.GetRepo()
 	defer repo.Close()
@@ -81,13 +61,35 @@ func (srv *Service) Create(ctx context.Context, req *pb.User, res *pb.CreateUser
 	return nil
 }
 
+// JWT related
+func (srv *Service) Auth(ctx context.Context, req *pb.User, res *pb.Token) error {
+	repo := srv.GetRepo()
+	defer repo.Close()
+	user, err := repo.GetByEmail(req.Email)
+	srv.Log.Info(user)
+	if err != nil {
+		return err
+	}
+	// Compares our given password against the hashed password
+	// stored in the database
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password)); err != nil {
+		return err
+	}
+	token, err := srv.TokenService.Encode(user)
+	if err != nil {
+		return err
+	}
+	res.Token = token
+	return nil
+}
+
+// JWT related
 func (srv *Service) ValidateToken(ctx context.Context, req *pb.Token, res *pb.Token) error {
 	// Decode token
 	claims, err := srv.TokenService.Decode(req.Token)
 	if err != nil {
 		return err
 	}
-	log.Println(claims)
 	if claims.User.Id == "" {
 		return errors.New("invalid user")
 	}

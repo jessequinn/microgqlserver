@@ -11,7 +11,7 @@ import (
 func main() {
 	// Dummy data
 	name := "Jesse Quinn"
-	email := "me@jesequinn.info"
+	email := "me5@jesequinn.info"
 	password := "test123"
 	company := "CBS"
 	// create a new service
@@ -53,6 +53,13 @@ func main() {
 		log.Fatalf("Could not authenticate user: %s error: %v\n", email, err)
 	}
 	log.Printf("Your access token is: %s \n", authResponse.Token)
+	validResponse, err := client.ValidateToken(context.Background(), &pb.Token{
+		Token: authResponse.Token,
+	})
+	if err != nil {
+		log.Fatalf("Could not validate token: %v\n", err)
+	}
+	log.Printf("Your token is valid: %v \n", validResponse.Valid)
 	// let's just exit because
 	os.Exit(0)
 }

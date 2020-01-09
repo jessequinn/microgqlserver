@@ -67,6 +67,10 @@ To build the graphql dependencies
 
     $ make gen
     
+To lint
+
+    $ make lint
+    
 To build the apps
 
     $ make build

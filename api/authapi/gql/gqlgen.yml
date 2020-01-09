@@ -19,3 +19,7 @@ models:
         model: github.com/jessequinn/microgqlserver/srv/authsrv/proto/auth.GetUserResponse
     UserInput:
         model: github.com/jessequinn/microgqlserver/srv/authsrv/proto/auth.User
+    Auth:
+        model: github.com/jessequinn/microgqlserver/srv/authsrv/proto/auth.Token
+    Valid:
+        model: github.com/jessequinn/microgqlserver/srv/authsrv/proto/auth.Token

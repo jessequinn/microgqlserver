@@ -2,16 +2,18 @@ package main
 
 import (
 	"github.com/globalsign/mgo"
+	"github.com/jessequinn/microgqlserver/srv/authsrv/loggers"
+	"github.com/micro/go-micro"
+	"github.com/micro/go-micro/server"
+	"github.com/sirupsen/logrus"
+	"os"
+	"time"
+
 	ds "github.com/jessequinn/microgqlserver/srv/authsrv/datastores"
 	hs "github.com/jessequinn/microgqlserver/srv/authsrv/handlers"
 	pb "github.com/jessequinn/microgqlserver/srv/authsrv/proto/auth"
 	rs "github.com/jessequinn/microgqlserver/srv/authsrv/repositories"
 	ss "github.com/jessequinn/microgqlserver/srv/authsrv/services"
-	"github.com/micro/go-micro"
-	"github.com/micro/go-micro/server"
-	"log"
-	"os"
-	"time"
 )
 
 // https://docs.mongodb.com/manual/reference/limits/#restrictions-on-db-names
@@ -33,6 +35,24 @@ func createDummyData(repo rs.Repository) {
 	}
 }
 
+var log = logrus.New()
+
+func init() {
+	log.Out = os.Stdout
+	file, err := os.OpenFile("/logs/access.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	if err == nil {
+		log.Out = file
+	} else {
+		log.Info("Failed to log to file, using default stderr")
+	}
+	log.AddHook(&loggers.WriterHook{
+		Writer: log.Out,
+		LogLevels: []logrus.Level{
+			logrus.InfoLevel,
+		},
+	})
+}
+
 func main() {
 	host := os.Getenv("DB_HOST")
 	if host == "" {
@@ -43,7 +63,6 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error connecting to datastore: %v", err)
 	}
-	// Index
 	index := mgo.Index{
 		Key:        []string{"email"},
 		Unique:     true,
@@ -56,10 +75,8 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error creating unique index: %v", err)
 	}
-
 	repo := &rs.AuthRepository{session.Copy()}
 	tokenService := &ss.TokenService{repo}
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	service := micro.NewService(
 		micro.Name("go.micro.srv.user"),
 		micro.Version("1.0.6"),
@@ -70,7 +87,7 @@ func main() {
 	service.Server().Init(
 		server.Wait(nil),
 	)
-	pb.RegisterUserServiceHandler(service.Server(), &hs.Service{session, tokenService})
+	pb.RegisterUserServiceHandler(service.Server(), &hs.Service{session, tokenService, log})
 	if err := service.Run(); err != nil {
 		log.Fatalf("Error running server: %v", err)
 	}

@@ -6,8 +6,18 @@ type User {
     password: String!
 }
 
+type Auth {
+    token: String!
+}
+
+type Valid {
+    valid: Boolean!
+}
+
 type Query {
     users: [User!]!
+    auth(email: String!, password: String!): Auth!
+    valid(token: String!): Valid!
 }
 
 input UserInput {

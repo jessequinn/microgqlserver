@@ -45,6 +45,35 @@ func (r *mutationResolver) CreateUser(ctx context.Context, user pb.User) (*pb.Ge
 
 type queryResolver struct{ *Resolver }
 
+func (r *queryResolver) Valid(ctx context.Context, token string) (*pb.Token, error) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+	res, err := r.Client.ValidateToken(ctx, &pb.Token{
+		Token: token,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &pb.Token{
+		Valid: res.Valid,
+	}, nil
+}
+
+func (r *queryResolver) Auth(ctx context.Context, email string, password string) (*pb.Token, error) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+	res, err := r.Client.Auth(ctx, &pb.User{
+		Email:    email,
+		Password: password,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &pb.Token{
+		Token: res.Token,
+	}, nil
+}
+
 func (r *queryResolver) Users(ctx context.Context) ([]*pb.GetUserResponse, error) {
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()

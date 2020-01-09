@@ -22,4 +22,4 @@ data:
 
 run:
 	docker-compose up --build --remove-orphans -d
-	docker-compose logs -f authsrv authcli
+	docker-compose logs -f authsrv authapi

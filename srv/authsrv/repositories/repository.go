@@ -3,6 +3,7 @@ package repositories
 import (
 	"github.com/globalsign/mgo"
 	"github.com/globalsign/mgo/bson"
+
 	pb "github.com/jessequinn/microgqlserver/srv/authsrv/proto/auth"
 )
 
@@ -62,11 +63,17 @@ func (repo *AuthRepository) Get(id string) (*pb.User, error) {
 }
 
 func (repo *AuthRepository) GetByEmail(email string) (*pb.User, error) {
-	user := &pb.User{}
-	if err := repo.collection().Find(bson.M{"email": email}).One(&user); err != nil {
+	item := AuthUser{}
+	if err := repo.collection().Find(bson.M{"email": email}).One(&item); err != nil {
 		return nil, err
 	}
-	return user, nil
+	return &pb.User{
+		Id:       item.ID.Hex(),
+		Name:     item.Name,
+		Company:  item.Company,
+		Email:    item.Email,
+		Password: item.Password,
+	}, nil
 }
 
 func (repo *AuthRepository) Create(user *pb.User) error {

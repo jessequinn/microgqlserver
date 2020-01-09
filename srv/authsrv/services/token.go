@@ -4,6 +4,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	pb "github.com/jessequinn/microgqlserver/srv/authsrv/proto/auth"
 	rs "github.com/jessequinn/microgqlserver/srv/authsrv/repositories"
+	"time"
 )
 
 var (
@@ -11,7 +12,8 @@ var (
 	// as a salt when hashing our tokens.
 	// Please make your own way more secure than this,
 	// use a randomly generated md5 hash or something.
-	key = []byte("mySuperSecretKeyLol")
+	// md5sum <<< "keypassphrase"
+	key = []byte("871a7b7013cdcb64e2710e3e7cb4d1b9")
 )
 
 // CustomClaims is our custom metadata, which will be hashed
@@ -31,13 +33,11 @@ type TokenService struct {
 }
 
 // Decode a token string into a token object
-func (srv *TokenService) Decode(token string) (*CustomClaims, error) {
-
+func (srv *TokenService) Decode(tokenString string) (*CustomClaims, error) {
 	// Parse the token
-	tokenType, err := jwt.ParseWithClaims(string(key), &CustomClaims{}, func(token *jwt.Token) (interface{}, error) {
+	tokenType, err := jwt.ParseWithClaims(tokenString, &CustomClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return key, nil
 	})
-
 	// Validate the token and return the custom claims
 	if claims, ok := tokenType.Claims.(*CustomClaims); ok && tokenType.Valid {
 		return claims, nil
@@ -52,14 +52,13 @@ func (srv *TokenService) Encode(user *pb.User) (string, error) {
 	claims := CustomClaims{
 		user,
 		jwt.StandardClaims{
-			ExpiresAt: 15000,
+			//ExpiresAt: 15000,
+			ExpiresAt: time.Now().Add(time.Minute * 60).Unix(),
 			Issuer:    "go.micro.srv.user",
 		},
 	}
-
 	// Create token
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
 	// Sign token and return
 	return token.SignedString(key)
 }

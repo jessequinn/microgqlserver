@@ -32,6 +32,12 @@ type queryResolver struct{ *Resolver }
 func (r *queryResolver) Users(ctx context.Context) ([]*go_micro_srv_user.GetUserResponse, error) {
 	panic("not implemented")
 }
+func (r *queryResolver) Auth(ctx context.Context, email string, password string) (*go_micro_srv_user.Token, error) {
+	panic("not implemented")
+}
+func (r *queryResolver) Valid(ctx context.Context, token string) (*go_micro_srv_user.Token, error) {
+	panic("not implemented")
+}
 
 type userResolver struct{ *Resolver }
 
